@@ -1,0 +1,14 @@
+[project]
+name = "restic-repo-explorer"
+version = "0.1.0"
+description = "TUI for exploring and administering a restic backup repository."
+readme = "README.rst"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+hello = "restic_repo_explorer:hello"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
