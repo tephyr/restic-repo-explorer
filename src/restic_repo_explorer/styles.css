@@ -1,0 +1,8 @@
+Screen {
+    layout: vertical;
+}
+
+.pane {
+    height: 1fr;
+    border: solid green;
+}
