@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "TUI for exploring and administering a restic backup repository."
 readme = "README.rst"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "resticpy>=1.1.0",
+    "textual>=0.79.1",
+]
 
 [project.scripts]
 hello = "restic_repo_explorer:hello"
@@ -12,3 +15,8 @@ hello = "restic_repo_explorer:hello"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "textual-dev>=1.6.1",
+]
