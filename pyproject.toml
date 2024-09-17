@@ -11,6 +11,7 @@ dependencies = [
 
 [project.scripts]
 hello = "restic_repo_explorer:hello"
+restic_repo_explorer = "restic_repo_explorer:run"
 
 [build-system]
 requires = ["hatchling"]
