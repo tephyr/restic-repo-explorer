@@ -20,3 +20,8 @@ Screen {
 Input {
     margin-bottom: 1;
 }
+
+#ok_button {
+    margin-top: 1;
+    width: 100%;
+}
