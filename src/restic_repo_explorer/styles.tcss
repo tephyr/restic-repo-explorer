@@ -9,5 +9,14 @@ Screen {
 
 .top-pane {
     border: thick green;
+/*    padding: 10px;*/
+}
+
+#title {
     text-align: center;
+    margin-bottom: 1;
+}
+
+Input {
+    margin-bottom: 1;
 }
