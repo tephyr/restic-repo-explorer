@@ -26,3 +26,26 @@ Input {
     margin-top: 1;
     width: 100%;
 }
+
+SettingsModal {
+    align: center middle;
+}
+
+#modal-container {
+    width: 60;
+    height: auto;
+    border: thick $primary;
+    background: $surface;
+    padding: 1 2;
+}
+
+#modal-title {
+    text-align: center;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+#save-button, #cancel-button {
+    margin-top: 1;
+    width: 100%;
+}
