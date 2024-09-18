@@ -9,4 +9,6 @@ Screen {
 
 .top-pane {
     border: thick yellow;
+    text-align: center;
+    padding: 10px;
 }
