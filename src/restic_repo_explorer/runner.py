@@ -26,14 +26,6 @@ class ThreePaneApp(App):
         yield Static("Pane 3", classes="pane")
         yield Footer()
 
-    def on_mount(self) -> None:
-        self.query_one(Footer).add_button("Settings", "settings", "Show Settings")
-
-    def on_footer_button_pressed(self, event: BindingType) -> None:
-        if event.button.id == "settings":
-            self.push_screen(SettingsModal())
-        yield Footer()
-
     def action_settings(self):
         self.push_screen(SettingsModal())
 
