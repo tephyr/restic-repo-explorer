@@ -1,11 +1,16 @@
 from textual.app import App, ComposeResult
-from textual.widgets import Static
+from textual.widgets import Static, Input
 from textual.css.query import NoMatches
+from textual.containers import Vertical
 
 class ThreePaneApp(App):
     CSS_PATH = "styles.tcss"
     def compose(self) -> ComposeResult:
-        yield Static("Pane 1", classes="pane top-pane")
+        with Vertical(classes="pane top-pane"):
+            yield Static("Repository Configuration", id="title")
+            yield Input(placeholder="Repository", id="repository")
+            yield Input(placeholder="Password file", id="password_file")
+            yield Input(placeholder="Additional field", id="additional_field")
         yield Static("Pane 2", classes="pane")
         yield Static("Pane 3", classes="pane")
 
