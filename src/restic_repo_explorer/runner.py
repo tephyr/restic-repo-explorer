@@ -3,6 +3,7 @@ from textual.widgets import Static, Input, Button, Footer
 from textual.css.query import NoMatches
 from textual.containers import Vertical
 from .settings import SettingsModal
+from textual.binding import BindingType
 
 class ThreePaneApp(App):
     CSS_PATH = "styles.tcss"
@@ -20,7 +21,7 @@ class ThreePaneApp(App):
     def on_mount(self) -> None:
         self.query_one(Footer).add_button("Settings", "settings", "Show Settings")
 
-    def on_footer_button_pressed(self, event: Footer.ButtonPressed) -> None:
+    def on_footer_button_pressed(self, event: BindingType) -> None:
         if event.button.id == "settings":
             self.push_screen(SettingsModal())
         yield Footer()
