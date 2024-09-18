@@ -1,3 +1,4 @@
+from textual import work
 from textual.app import App, ComposeResult
 from textual.widgets import Static, Input, Button, Footer, Label
 from textual.css.query import NoMatches
@@ -26,8 +27,15 @@ class ThreePaneApp(App):
         yield Static("Pane 3", classes="pane")
         yield Footer()
 
-    def action_settings(self):
-        self.push_screen(SettingsModal())
+    @work
+    async def action_settings(self):
+        if await self.push_screen_wait(SettingsModal()):
+            self.notify("Settings OK")
+            repo_text = self.query_one("#repository_text")
+            repo_text.update(config.repository_path)
+            self.query_one("#password_file_text").update(config.password_file_path)
+        else:
+            self.notify("Settings cancelled", severity="warn")
 
 def run_app():
     app = ThreePaneApp()
