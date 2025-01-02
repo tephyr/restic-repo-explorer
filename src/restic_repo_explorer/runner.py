@@ -1,5 +1,6 @@
 from textual import work
 from textual.app import App, ComposeResult
+from textual.theme import Theme
 from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem
 from textual.css.query import NoMatches
 from textual.containers import Horizontal, Vertical
@@ -16,6 +17,13 @@ class ThreePaneApp(App):
         Binding(key="t", action="settings", description="Settings"),
         Binding(key="l", action="load", description="Load snapshots"),
     ]
+
+    def on_mount(self):
+        # Register the theme: only used *for app-specific themes*.
+        # self.app.register_theme(arctic_theme)
+
+        # Set the app's theme
+        self.theme = "flexoki" # "arctic"
 
     def on_list_view_selected(self, event: ListView.Selected) -> None:
         """Handle selection of a snapshot."""

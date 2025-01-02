@@ -52,5 +52,5 @@ SettingsModal {
 
 .current-snapshot {
     background: $accent;
-    color: $text;
+    color: $text-muted;
 }
