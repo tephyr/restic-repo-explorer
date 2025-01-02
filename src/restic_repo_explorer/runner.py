@@ -25,7 +25,7 @@ class ThreePaneApp(App):
             with Horizontal():
                 yield Label("Password file:", id="password_file_label")
                 yield Label(config.password_file_path, id="password_file_text")
-        yield Static("Pane 2", classes="pane")
+        yield Static("Snapshots", classes="pane", id="snapshots_pane")
         yield Static("Pane 3", classes="pane")
         yield Footer()
 
@@ -43,8 +43,11 @@ class ThreePaneApp(App):
     async def action_load(self):
         snapshots = Snapshots(config.repository_path, config.password_file_path)
         available_snapshots = snapshots.get_snapshots()
-        print(f'Snapshots for ${config.repository_path}')
-        print(available_snapshots)
+        snapshots_pane = self.query_one("#snapshots_pane", Static)
+        snapshots_text = f"Snapshots for {config.repository_path}:\n\n"
+        for snapshot in available_snapshots:
+            snapshots_text += f"- {snapshot}\n"
+        snapshots_pane.update(snapshots_text)
 
 def run_app():
     app = ThreePaneApp()
