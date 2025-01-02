@@ -22,8 +22,15 @@ class ThreePaneApp(App):
         if not self.available_snapshots:
             return
             
+        # Remove current-snapshot class from all items
+        for item in event.list_view.query("ListItem"):
+            item.remove_class("current-snapshot")
+            
         selected_index = event.list_view.index
         if 0 <= selected_index < len(self.available_snapshots):
+            # Add class to newly selected item
+            event.item.add_class("current-snapshot")
+            
             snapshot = self.available_snapshots[selected_index]
             details = f"Selected Snapshot Details:\n\n"
             details += f"Tags: {snapshot.get('tags', [])}\n"

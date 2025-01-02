@@ -49,3 +49,8 @@ SettingsModal {
     margin-top: 1;
     width: 100%;
 }
+
+.current-snapshot {
+    background: $accent;
+    color: $text;
+}
