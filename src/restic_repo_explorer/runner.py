@@ -41,6 +41,8 @@ class ThreePaneApp(App):
             
             snapshot = self.available_snapshots[selected_index]
             details = f"Selected Snapshot Details:\n\n"
+            details += f"ID: {snapshot['id']}\n"
+            details += f"Time: {snapshot['time']}\n"
             details += f"Tags: {snapshot.get('tags', [])}\n"
             details += f"\nPaths:\n"
             for path in snapshot.get('paths', []):
@@ -79,7 +81,15 @@ class ThreePaneApp(App):
         snapshots_pane = self.query_one("#snapshots_pane", ListView)
         snapshots_pane.clear()
         for snapshot in self.available_snapshots:
-            snapshots_pane.append(ListItem(Label(str(snapshot))))
+            snapshots_pane.append(ListItem(Label(self._get_snapshot_header(snapshot))))
+
+    def _get_snapshot_header(self, snapshot) -> str:
+        """
+        Return a formatted string of header-specific values for this snapshot.
+        """
+
+        # return f'[{snapshot["short_id"]}] {snapshot["time"]} {snapshot["hostname"]}'
+        return f'{snapshot["short_id"]}: {snapshot["time"]} {snapshot["hostname"]}'
 
 def run_app():
     app = ThreePaneApp()
