@@ -6,12 +6,14 @@ from textual.containers import Horizontal, Vertical
 from .settings import SettingsModal
 from textual.binding import Binding, BindingType
 from .config import config
+from .restic_api.access import Snapshots
 
 class ThreePaneApp(App):
     CSS_PATH = "styles.tcss"
     BINDINGS = [
         Binding(key="q", action="quit", description="Quit the app"),
-        Binding(key="t", action="settings", description="Settings")
+        Binding(key="t", action="settings", description="Settings"),
+        Binding(key="l", action="load", description="Load snapshots"),
     ]
 
     def compose(self) -> ComposeResult:        
@@ -36,6 +38,13 @@ class ThreePaneApp(App):
             self.query_one("#password_file_text").update(config.password_file_path)
         else:
             self.notify("Settings cancelled", severity="warn")
+
+    @work
+    async def action_load(self):
+        snapshots = Snapshots(config.repository_path, config.password_file_path)
+        available_snapshots = snapshots.get_snapshots()
+        print(f'Snapshots for ${config.repository_path}')
+        print(available_snapshots)
 
 def run_app():
     app = ThreePaneApp()
