@@ -9,12 +9,30 @@ from .config import config
 from .restic_api.access import Snapshots
 
 class ThreePaneApp(App):
+    available_snapshots = []  # Store snapshots data
     CSS_PATH = "styles.tcss"
     BINDINGS = [
         Binding(key="q", action="quit", description="Quit the app"),
         Binding(key="t", action="settings", description="Settings"),
         Binding(key="l", action="load", description="Load snapshots"),
     ]
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        """Handle selection of a snapshot."""
+        if not self.available_snapshots:
+            return
+            
+        selected_index = event.list_view.index
+        if 0 <= selected_index < len(self.available_snapshots):
+            snapshot = self.available_snapshots[selected_index]
+            details = f"Selected Snapshot Details:\n\n"
+            details += f"Tags: {snapshot.get('tags', [])}\n"
+            details += f"\nPaths:\n"
+            for path in snapshot.get('paths', []):
+                details += f"- {path}\n"
+            
+            details_pane = self.query_one("#details_pane", Static)
+            details_pane.update(details)
 
     def compose(self) -> ComposeResult:        
         with Vertical(classes="pane top-pane"):
@@ -26,7 +44,7 @@ class ThreePaneApp(App):
                 yield Label("Password file:", id="password_file_label")
                 yield Label(config.password_file_path, id="password_file_text")
         yield ListView(classes="pane", id="snapshots_pane")
-        yield Static("Pane 3", classes="pane")
+        yield Static("Snapshot Details", classes="pane", id="details_pane")
         yield Footer()
 
     @work
@@ -42,10 +60,10 @@ class ThreePaneApp(App):
     @work
     async def action_load(self):
         snapshots = Snapshots(config.repository_path, config.password_file_path)
-        available_snapshots = snapshots.get_snapshots()
+        self.available_snapshots = snapshots.get_snapshots()  # Store for later use
         snapshots_pane = self.query_one("#snapshots_pane", ListView)
         snapshots_pane.clear()
-        for snapshot in available_snapshots:
+        for snapshot in self.available_snapshots:
             snapshots_pane.append(ListItem(Label(str(snapshot))))
 
 def run_app():
