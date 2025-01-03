@@ -50,9 +50,9 @@ SettingsModal {
     margin-bottom: 1;
 }
 
-#save-button, #cancel-button {
-    margin-top: 1;
-    width: 100%;
+#save-button, #cancel-button, #forget-button, #prune-button {
+    margin: 1 1;
+    min-width: 16;
 }
 
 .current-snapshot {

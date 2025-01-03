@@ -1,7 +1,7 @@
 from textual import work
 from textual.app import App, ComposeResult
 from textual.theme import Theme
-from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree
+from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree, ModalScreen
 from textual.css.query import NoMatches
 from textual.containers import Horizontal, Vertical
 from .settings import SettingsModal
@@ -63,6 +63,27 @@ class ThreePaneApp(App):
             summary_tree.root.label = f"Summary for {snapshot['short_id']}"
             summary_tree.root.expand_all()
 
+class ForgetModal(ModalScreen):
+    """Modal for forget/prune operations."""
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="modal-container"):
+            yield Static("Are you sure you want to forget this snapshot?\nThis operation cannot be undone.", id="modal-title")
+            with Horizontal():
+                yield Button("Forget", variant="error", id="forget-button")
+                yield Button("Prune", variant="warning", id="prune-button") 
+                yield Button("Cancel", variant="primary", id="cancel-button")
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Handle button presses."""
+        if event.button.id == "cancel-button":
+            self.dismiss(False)
+        elif event.button.id == "forget-button":
+            self.dismiss("forget")
+        elif event.button.id == "prune-button":
+            self.dismiss("prune")
+
+class ThreePaneApp(App):
     def compose(self) -> ComposeResult:        
         with Vertical(classes="pane top-pane"):
             yield Static("Repository Configuration", id="title")
@@ -87,6 +108,15 @@ class ThreePaneApp(App):
             self.query_one("#password_file_text").update(config.password_file_path)
         else:
             self.notify("Settings cancelled", severity="warn")
+
+    @work
+    async def action_forget(self) -> None:
+        """Handle the forget action."""
+        result = await self.push_screen_wait(ForgetModal())
+        if result == "forget":
+            self.notify("Forget operation would happen here")
+        elif result == "prune":
+            self.notify("Prune operation would happen here")
 
     @work
     async def action_load(self):
