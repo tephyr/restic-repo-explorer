@@ -38,7 +38,7 @@ SettingsModal, ForgetModal {
 
 #settings-modal-container, #forget-modal-container {
     width: 60;
-    height: auto;
+    height: 30;
     border: thick $primary;
     background: $surface;
     padding: 1 2;

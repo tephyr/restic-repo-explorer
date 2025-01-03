@@ -9,6 +9,7 @@ class ForgetModal(ModalScreen):
     def compose(self) -> ComposeResult:
         with Vertical(id="forget-modal-container"):
             yield Static("Are you sure you want to forget this snapshot?\nThis operation cannot be undone.", id="forget-modal-title")
+            yield Static(f"\nID: {self.app.current_snapshot['short_id']}\nTime: {self.app.current_snapshot['time']}")
             with Horizontal():
                 yield Button("Forget", variant="error", id="forget-button")
                 yield Button("Prune", variant="warning", id="prune-button") 

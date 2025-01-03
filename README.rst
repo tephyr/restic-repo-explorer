@@ -12,6 +12,12 @@ With `Textual:Devtools <https://textual.textualize.io/guide/devtools/>`__ & ``uv
     # 2. Run the application in dev mode, via a module import.
     uv run textual run --dev restic_repo_explorer:run
 
+Hints
+-----
+Reduce the events in ``textual console`` (see `Decreasing Verbosity <https://textual.textualize.io/guide/devtools/#decreasing-verbosity>`__)::
+
+    uv run textual console -x EVENTS
+
 Usage
 ++++++
 To set the restic repository and password through the environment, use these environment variables::
