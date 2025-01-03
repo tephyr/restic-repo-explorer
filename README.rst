@@ -1,6 +1,6 @@
 restic-repo-explorer
 ====================
-A TUI (Text User Interface) for exploring and administering a restic backup repository.
+A TUI (Text User Interface) for exploring and administering a `restic <https://restic.net/>`__ backup repository.
 
 Development
 +++++++++++
