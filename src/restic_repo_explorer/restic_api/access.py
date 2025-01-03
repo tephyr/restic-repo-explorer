@@ -19,3 +19,7 @@ class Snapshots():
     def get_snapshots(self):
         self.connect_repo()
         return restic.snapshots()
+
+    def get_snapshot(self, snapshot_id):
+        self.connect_repo()
+        return restic.snapshots(snapshot_id)

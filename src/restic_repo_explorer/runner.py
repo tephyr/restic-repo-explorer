@@ -1,7 +1,7 @@
 from textual import work
 from textual.app import App, ComposeResult
 from textual.theme import Theme
-from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem
+from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree
 from textual.css.query import NoMatches
 from textual.containers import Horizontal, Vertical
 from .settings import SettingsModal
@@ -47,9 +47,20 @@ class ThreePaneApp(App):
             details += f"\nPaths:\n"
             for path in snapshot.get('paths', []):
                 details += f"- {path}\n"
-            
+
             details_pane = self.query_one("#details_pane", Static)
             details_pane.update(details)
+
+            # Get data for individual snapshot.
+            snapshots = Snapshots(config.repository_path, config.password_file_path)
+            single_snapshot = snapshots.get_snapshot(snapshot['id'])
+            # print(single_snapshot)
+            # Show JSON summary for this snapshot.
+            summary_tree = self.query_one("#summary_tree", Tree)
+            summary_tree.clear()
+            summary_tree.add_json(single_snapshot[0]) # Always returned as a single-item list.
+            summary_tree.root.label = f"Summary for {snapshot['short_id']}"
+            summary_tree.root.expand_all()
 
     def compose(self) -> ComposeResult:        
         with Vertical(classes="pane top-pane"):
@@ -61,7 +72,9 @@ class ThreePaneApp(App):
                 yield Label("Password file:", id="password_file_label")
                 yield Label(config.password_file_path, id="password_file_text")
         yield ListView(classes="pane", id="snapshots_pane")
-        yield Static("Snapshot Details", classes="pane", id="details_pane")
+        with Horizontal(classes="pane bottom-pane"):
+            yield Static("Snapshot Details", id="details_pane", classes="left")
+            yield Tree("Summary", id="summary_tree", classes="right")
         yield Footer()
 
     @work

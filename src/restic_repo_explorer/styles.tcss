@@ -12,6 +12,12 @@ Screen {
     height: 7;
 }
 
+.bottom-pane {
+    .left, .right {
+        width: 1fr;
+    }
+}
+
 #title {
     text-align: center;
     margin-bottom: 1;
