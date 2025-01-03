@@ -16,6 +16,7 @@ class ThreePaneApp(App):
         Binding(key="q", action="quit", description="Quit the app"),
         Binding(key="t", action="settings", description="Settings"),
         Binding(key="l", action="load", description="Load snapshots"),
+        Binding(key="f", action="forget", description="Forget snapshot"),
     ]
 
     def on_mount(self):
