@@ -27,44 +27,6 @@ class ThreePaneApp(App):
         # Set the app's theme
         self.theme = "flexoki" # "arctic"
 
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        """Handle selection of a snapshot."""
-        if not self.available_snapshots:
-            return
-            
-        # Remove current-snapshot class from all items
-        for item in event.list_view.query("ListItem"):
-            item.remove_class("current-snapshot")
-            
-        selected_index = event.list_view.index
-        if 0 <= selected_index < len(self.available_snapshots):
-            # Add class to newly selected item
-            event.item.add_class("current-snapshot")
-            
-            snapshot = self.available_snapshots[selected_index]
-            details = f"Selected Snapshot Details:\n\n"
-            details += f"ID: {snapshot['id']}\n"
-            details += f"Time: {snapshot['time']}\n"
-            details += f"Tags: {snapshot.get('tags', [])}\n"
-            details += f"\nPaths:\n"
-            for path in snapshot.get('paths', []):
-                details += f"- {path}\n"
-
-            details_pane = self.query_one("#details_pane", Static)
-            details_pane.update(details)
-
-            # Get data for individual snapshot.
-            snapshots = Snapshots(config.repository_path, config.password_file_path)
-            single_snapshot = snapshots.get_snapshot(snapshot['id'])
-            # print(single_snapshot)
-            # Show JSON summary for this snapshot.
-            summary_tree = self.query_one("#summary_tree", Tree)
-            summary_tree.clear()
-            summary_tree.add_json(single_snapshot[0]) # Always returned as a single-item list.
-            summary_tree.root.label = f"Summary for {snapshot['short_id']}"
-            summary_tree.root.expand_all()
-
-class ThreePaneApp(App):
     def compose(self) -> ComposeResult:        
         with Vertical(classes="pane top-pane"):
             yield Static("Repository Configuration", id="title")
@@ -107,6 +69,43 @@ class ThreePaneApp(App):
         snapshots_pane.clear()
         for snapshot in self.available_snapshots:
             snapshots_pane.append(ListItem(Label(self._get_snapshot_header(snapshot))))
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        """Handle selection of a snapshot."""
+        if not self.available_snapshots:
+            return
+            
+        # Remove current-snapshot class from all items
+        for item in event.list_view.query("ListItem"):
+            item.remove_class("current-snapshot")
+            
+        selected_index = event.list_view.index
+        if 0 <= selected_index < len(self.available_snapshots):
+            # Add class to newly selected item
+            event.item.add_class("current-snapshot")
+            
+            snapshot = self.available_snapshots[selected_index]
+            details = f"Selected Snapshot Details:\n\n"
+            details += f"ID: {snapshot['id']}\n"
+            details += f"Time: {snapshot['time']}\n"
+            details += f"Tags: {snapshot.get('tags', [])}\n"
+            details += f"\nPaths:\n"
+            for path in snapshot.get('paths', []):
+                details += f"- {path}\n"
+
+            details_pane = self.query_one("#details_pane", Static)
+            details_pane.update(details)
+
+            # Get data for individual snapshot.
+            snapshots = Snapshots(config.repository_path, config.password_file_path)
+            single_snapshot = snapshots.get_snapshot(snapshot['id'])
+            # print(single_snapshot)
+            # Show JSON summary for this snapshot.
+            summary_tree = self.query_one("#summary_tree", Tree)
+            summary_tree.clear()
+            summary_tree.add_json(single_snapshot[0]) # Always returned as a single-item list.
+            summary_tree.root.label = f"Summary for {snapshot['short_id']}"
+            summary_tree.root.expand_all()
 
     def _get_snapshot_header(self, snapshot) -> str:
         """

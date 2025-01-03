@@ -8,12 +8,12 @@ from .config import config
 class SettingsModal(ModalScreen):
     def compose(self) -> ComposeResult:
         yield Vertical(
-            Static("Settings", id="modal-title"),
+            Static("Settings", id="settings-modal-title"),
             Input(placeholder="Repository", id="repository", value=config.repository_path),
             Input(placeholder="Password file", id="password_file", value=config.password_file_path),
             Button("Save", id="save-button"),
             Button("Cancel", id="cancel-button"),
-            id="modal-container"
+            id="settings-modal-container"
         )
 
     @on(Button.Pressed, "#save-button")

@@ -32,11 +32,11 @@ Input {
     width: 100%;
 }
 
-SettingsModal {
+SettingsModal, ForgetModal {
     align: center middle;
 }
 
-#modal-container {
+#settings-modal-container, #forget-modal-container {
     width: 60;
     height: auto;
     border: thick $primary;
@@ -44,7 +44,7 @@ SettingsModal {
     padding: 1 2;
 }
 
-#modal-title {
+#settings-modal-title {
     text-align: center;
     text-style: bold;
     margin-bottom: 1;
