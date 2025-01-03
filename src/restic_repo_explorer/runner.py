@@ -1,9 +1,10 @@
 from textual import work
 from textual.app import App, ComposeResult
 from textual.theme import Theme
-from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree, ModalScreen
+from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree
 from textual.css.query import NoMatches
 from textual.containers import Horizontal, Vertical
+from textual.screen import ModalScreen
 from .settings import SettingsModal
 from textual.binding import Binding, BindingType
 from .config import config
