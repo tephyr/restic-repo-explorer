@@ -9,7 +9,7 @@ Screen {
 
 .top-pane {
     border: thick green;
-    height: auto;
+    height: 7;
 }
 
 #title {
