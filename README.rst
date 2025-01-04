@@ -2,6 +2,18 @@ restic-repo-explorer
 ====================
 A TUI (Text User Interface) for exploring and administering a `restic <https://restic.net/>`__ backup repository.
 
+Usage
+++++++
+Optional: to set the restic repository and password through the environment, use these environment variables::
+
+    RESTIC_REPOSITORY
+    RESTIC_PASSWORD_FILE
+
+#. Download this repo & change to its directory.
+#. Run with ``uv``::
+
+    uv run restic_repo_explorer
+
 Development
 +++++++++++
 With `Textual:Devtools <https://textual.textualize.io/guide/devtools/>`__ & ``uv``::
@@ -17,10 +29,3 @@ Hints
 Reduce the events in ``textual console`` (see `Decreasing Verbosity <https://textual.textualize.io/guide/devtools/#decreasing-verbosity>`__)::
 
     uv run textual console -x EVENTS
-
-Usage
-++++++
-To set the restic repository and password through the environment, use these environment variables::
-
-    RESTIC_REPOSITORY
-    RESTIC_PASSWORD_FILE
