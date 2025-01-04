@@ -4,9 +4,11 @@ from textual.theme import Theme
 from textual.widgets import Static, Input, Button, Footer, Label, ListView, ListItem, Tree
 from textual.css.query import NoMatches
 from textual.containers import Horizontal, Vertical
+from textual.binding import Binding, BindingType
+import humanize
+
 from .settings import SettingsModal
 from .forget import ForgetModal
-from textual.binding import Binding, BindingType
 from .config import config
 from .restic_api.access import RepoAccess
 
@@ -40,7 +42,7 @@ class ThreePaneApp(App):
                 yield Label(config.password_file_path, id="password_file_text")
         yield ListView(classes="pane", id="snapshots_pane")
         with Horizontal(classes="pane bottom-pane"):
-            yield Static("Snapshot Details", id="details_pane", classes="left")
+            yield Static("Details", id="details_pane", classes="left")
             yield Tree("Summary", id="summary_tree", classes="right")
         yield Footer()
 
@@ -91,19 +93,12 @@ class ThreePaneApp(App):
             event.item.add_class("current-snapshot")
             
             self.current_snapshot = self.available_snapshots[selected_index]
-            details = f"Selected Snapshot Details:\n\n"
-            details += f"ID: {self.current_snapshot['id']}\n"
-            details += f"Time: {self.current_snapshot['time']}\n"
-            details += f"Tags: {self.current_snapshot.get('tags', [])}\n"
-            details += f"\nPaths:\n"
-            for path in self.current_snapshot.get('paths', []):
-                details += f"- {path}\n"
+            details = f"Details for {self.current_snapshot.get('short_id')}:\n\n{self._get_snapshot_details(self.current_snapshot)}"
 
             details_pane = self.query_one("#details_pane", Static)
             details_pane.update(details)
 
             # Get data for individual snapshot.
-            # snapshots = Snapshots(config.repository_path, config.password_file_path)
             single_snapshot = self.repo_access.get_snapshot(self.current_snapshot['id'])
 
             # Show JSON summary for this snapshot.
@@ -120,6 +115,58 @@ class ThreePaneApp(App):
 
         # return f'[{snapshot["short_id"]}] {snapshot["time"]} {snapshot["hostname"]}'
         return f'{snapshot["short_id"]}: {snapshot["time"]} {snapshot["hostname"]}'
+
+    def _get_snapshot_details(self, snapshot) -> str:
+        """
+        Build a human-readable string of the available information.  Only display what is available from the summary.
+        """
+        details = [
+            f"ID: {snapshot['id']}",
+            f"Time: {snapshot['time']}",
+            f"Tags: {snapshot.get('tags', [])}",
+            f"Paths:",
+            ""
+        ]
+        for path in snapshot.get('paths', []):
+            details.extend([f"- {path}"])
+
+        finegrained_details = self._get_finegrained_details(snapshot)
+        if len(finegrained_details) > 0:
+            details.extend(['', 'Changes', ''])
+            details.extend([f"- {x}" for x in finegrained_details])
+        else:
+            details.extend(['', 'No changes detected'])
+
+        return '\n'.join(details)
+
+    def _get_finegrained_details(self, snapshot) -> list:
+        """
+        Get newer (>=v0.17) details.
+        """
+
+        details = []
+        if "summary" in snapshot:
+            summary = snapshot["summary"]
+            files_new = summary.get('files_new', 0)
+            files_changed = summary.get('files_changed', 0)
+
+            keys_and_titles = (
+                ['files_new', 'New files'],
+                ['files_changed', 'Changed files'],
+                ['dirs_new', 'New directories'],
+                ['dirs_changed', 'Changed directories']
+            )
+
+            for line in keys_and_titles:
+                if summary.get(line[0]):
+                    details.append(f"{line[1]}: {summary[line[0]]}")
+
+            if summary.get('data_added'):
+                details.append(f"Data added (raw): {humanize.naturalsize(summary['data_added'], gnu=True)}")
+                details.append(f"Data added (packed): {humanize.naturalsize(summary['data_added_packed'], gnu=True)}")
+
+        return details
+
 
     def _forget_snapshot(self):
         if self.repo_access is None:

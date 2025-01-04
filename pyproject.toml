@@ -5,6 +5,7 @@ description = "TUI for exploring and administering a restic backup repository."
 readme = "README.rst"
 requires-python = ">=3.11"
 dependencies = [
+    "humanize>=4.11.0",
     "resticpy>=1.1.0",
     "textual>=1.0.0",
 ]
