@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class Config:
     repository_path: str = ""
     password_file_path: str = ""
+    dry_run: bool = True
 
     def load_from_env(self):
         self.repository_path = os.environ.get("RESTIC_REPOSITORY", "")

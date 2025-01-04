@@ -1,6 +1,7 @@
 """
 restic access.
 """
+from ..config import config
 
 import restic
 
@@ -31,7 +32,10 @@ class RepoAccess():
         # Build command "manually"", as resticpy does not currently support specifying a single snapshot to forget.
         # print(f'Base command: {restic._make_base_command()}')
         cmd = restic._make_base_command()
-        cmd.extend(['forget', snapshot_id, '--dry-run'])
+        cmd.extend(['forget', snapshot_id])
+        if config.dry_run:
+            cmd.extend(['--dry-run'])
+
         print(f'Forget command: {cmd}')
         # Call restic.internal.forget's parser, as the output is currently JSON AND text combined.
         result = restic.internal.forget._parse_result(restic.internal.command_executor.execute(cmd))
