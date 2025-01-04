@@ -129,7 +129,12 @@ class ThreePaneApp(App):
         else:
             result = self.repo_access.forget_snapshot(self.current_snapshot['id'])
             self.log('self.repo_access.forget_snapshot', self.current_snapshot['short_id'], result)
-            self.notify(f"Snapshot {self.current_snapshot['short_id']} forgotten.  Please reload the list to continue.")
+            notice = f"Snapshot {self.current_snapshot['short_id']} forgotten."
+            if config.dry_run:
+                notice += " Dry-run activated; no changes made."
+            else:
+                notice += " Please reload the list to continue."
+            self.notify(notice)
             self.current_snapshot = None
 
 
